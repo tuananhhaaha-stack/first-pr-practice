@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ViralLens</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="logo">◎</span> ViralLens <small>Nghiên cứu viral · Tối ưu giữ chân · Tăng tương tác</small></div>
+    <nav class="tabs" role="tablist">
+      <button class="tab active" data-tab="analyze">Phân tích video</button>
+      <button class="tab" data-tab="research">Nghiên cứu viral</button>
+      <button class="tab" data-tab="trends">Xu hướng</button>
+      <button class="tab" data-tab="library">Thư viện <span id="lib-count" class="badge">0</span></button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ============ ANALYZE ============ -->
+    <section id="tab-analyze" class="panel active">
+      <div class="grid">
+        <form id="analyze-form" class="card form">
+          <h2>Video của bạn</h2>
+          <label class="drop" data-input="analyze-file">
+            <input type="file" id="analyze-file" accept="video/*" hidden />
+            <span>Kéo thả hoặc bấm để chọn video</span>
+          </label>
+          <video id="analyze-preview" class="preview" controls playsinline hidden></video>
+          <div class="row">
+            <label>Nền tảng
+              <select name="platform">
+                <option>TikTok</option><option>Instagram Reels</option><option>YouTube Shorts</option><option>YouTube (dài)</option><option>Facebook Reels</option>
+              </select>
+            </label>
+            <label>Ngách / chủ đề <input name="niche" placeholder="VD: nấu ăn, review công nghệ" /></label>
+          </div>
+          <label>Mục tiêu <input name="goal" placeholder="VD: tăng follow, bán hàng, tăng thời gian xem" /></label>
+          <label>Tiêu đề / text cover <input name="title" /></label>
+          <label>Caption <textarea name="caption" rows="2"></textarea></label>
+          <label>Lời thoại / voice-over / text trên màn hình <small>(nên có — AI không nghe được âm thanh)</small>
+            <textarea name="transcript" rows="4" placeholder="0:00 Bạn có biết..."></textarea>
+          </label>
+          <fieldset id="ref-picker" class="refs">
+            <legend>So sánh với video viral trong thư viện</legend>
+            <p class="muted">Chưa có video nào. Hãy phân tích ở tab “Nghiên cứu viral”.</p>
+          </fieldset>
+          <button type="submit" class="primary">Phân tích &amp; đề xuất</button>
+          <p class="status" id="analyze-status"></p>
+        </form>
+        <div id="analyze-report" class="report empty">
+          <div class="placeholder">
+            <h3>Báo cáo sẽ hiện ở đây</h3>
+            <ul>
+              <li>Điểm hook, giữ chân, nhịp, hình ảnh, kể chuyện, tương tác</li>
+              <li>Timeline nguy cơ người xem lướt đi + cách sửa từng đoạn</li>
+              <li>3 phương án hook mới, tiêu đề, caption, hashtag, cover</li>
+              <li>Checklist dựng lại video</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ RESEARCH ============ -->
+    <section id="tab-research" class="panel">
+      <div class="grid">
+        <form id="research-form" class="card form">
+          <h2>Video viral tham khảo</h2>
+          <label class="drop" data-input="research-file">
+            <input type="file" id="research-file" accept="video/*" hidden />
+            <span>Kéo thả hoặc bấm để chọn video viral</span>
+          </label>
+          <video id="research-preview" class="preview" controls playsinline hidden></video>
+          <div class="row">
+            <label>Nền tảng
+              <select name="platform">
+                <option>TikTok</option><option>Instagram Reels</option><option>YouTube Shorts</option><option>YouTube (dài)</option><option>Facebook Reels</option>
+              </select>
+            </label>
+            <label>Ngách <input name="niche" /></label>
+          </div>
+          <label>Link gốc <input name="url" placeholder="https://..." /></label>
+          <div class="row four">
+            <label>Views <input name="views" /></label>
+            <label>Likes <input name="likes" /></label>
+            <label>Comments <input name="comments" /></label>
+            <label>Shares <input name="shares" /></label>
+          </div>
+          <label>Caption <textarea name="caption" rows="2"></textarea></label>
+          <label>Lời thoại / text trên màn hình <textarea name="transcript" rows="3"></textarea></label>
+          <button type="submit" class="primary">Mổ xẻ video viral</button>
+          <p class="status" id="research-status"></p>
+        </form>
+        <div id="research-report" class="report empty">
+          <div class="placeholder">
+            <h3>Giải mã công thức viral</h3>
+            <ul>
+              <li>Vì sao video viral, kiểu hook, cấu trúc từng nhịp</li>
+              <li>Kỹ thuật dựng, yếu tố cảm xúc, động lực tương tác</li>
+              <li>Công thức áp dụng lại — lưu vào thư viện để so sánh</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TRENDS ============ -->
+    <section id="tab-trends" class="panel">
+      <form id="trends-form" class="card form inline">
+        <label>Ngách <input name="niche" required placeholder="VD: skincare cho nam" /></label>
+        <label>Nền tảng
+          <select name="platform"><option>TikTok</option><option>Instagram Reels</option><option>YouTube Shorts</option><option>YouTube</option></select>
+        </label>
+        <label>Thị trường <input name="market" value="Việt Nam" /></label>
+        <button type="submit" class="primary">Tìm xu hướng</button>
+      </form>
+      <p class="status" id="trends-status"></p>
+      <article id="trends-report" class="card markdown" hidden></article>
+    </section>
+
+    <!-- ============ LIBRARY ============ -->
+    <section id="tab-library" class="panel">
+      <div id="library-list" class="library"></div>
+    </section>
+  </main>
+
+  <canvas id="frame-canvas" hidden></canvas>
+  <script src="app.js" type="module"></script>
+</body>
+</html>
