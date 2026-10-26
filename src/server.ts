@@ -10,9 +10,11 @@ import {
   structuredCall,
   webResearch,
 } from "./claude.js";
+import { ImportError, importFromUrl, mediaPath } from "./importer.js";
 import { ANALYZE_SYSTEM, RESEARCH_SYSTEM, TRENDS_SYSTEM } from "./prompts.js";
 import {
   AnalyzeRequestSchema,
+  ImportRequestSchema,
   ResearchRequestSchema,
   TrendsRequestSchema,
   VideoAnalysisSchema,
@@ -35,6 +37,10 @@ function route(handler: Handler): express.RequestHandler {
         res.status(400).json({ error: "Dữ liệu gửi lên không hợp lệ", details: err.issues });
         return;
       }
+      if (err instanceof ImportError) {
+        res.status(err.status).json({ error: err.message });
+        return;
+      }
       const { status, message } = errorToResponse(err);
       res.status(status).json({ error: message });
     }
@@ -43,6 +49,21 @@ function route(handler: Handler): express.RequestHandler {
 
 app.get("/api/health", (_req, res) => {
   res.json({ ok: true, model: MODEL, hasKey: Boolean(process.env.ANTHROPIC_API_KEY) });
+});
+
+// Download a video from a TikTok / YouTube / Instagram / Facebook link.
+app.post(
+  "/api/import",
+  route(async (body) => importFromUrl(ImportRequestSchema.parse(body).url)),
+);
+
+app.get("/api/media/:id", async (req, res) => {
+  const file = await mediaPath(req.params.id);
+  if (!file) {
+    res.status(404).json({ error: "Video đã hết hạn, hãy dán link lại." });
+    return;
+  }
+  res.sendFile(file);
 });
 
 // Analyze the user's own video and return an improvement report.

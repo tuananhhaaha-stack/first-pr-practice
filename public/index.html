@@ -23,6 +23,11 @@
       <div class="grid">
         <form id="analyze-form" class="card form">
           <h2>Video của bạn</h2>
+          <div class="import">
+            <input type="url" id="analyze-url" placeholder="Dán link TikTok / YouTube / Reels / Facebook" />
+            <button type="button" class="ghost" data-import="analyze">Lấy video</button>
+          </div>
+          <div class="or">hoặc tải file lên</div>
           <label class="drop" data-input="analyze-file">
             <input type="file" id="analyze-file" accept="video/*" hidden />
             <span>Kéo thả hoặc bấm để chọn video</span>
@@ -38,6 +43,8 @@
           </div>
           <label>Mục tiêu <input name="goal" placeholder="VD: tăng follow, bán hàng, tăng thời gian xem" /></label>
           <label>Tiêu đề / text cover <input name="title" /></label>
+          <label>Số liệu hiện tại <small>(nếu video đã đăng)</small> <input name="stats" placeholder="VD: 12.000 views, 300 likes, 15 comments" /></label>
+          <input type="hidden" name="url" />
           <label>Caption <textarea name="caption" rows="2"></textarea></label>
           <label>Lời thoại / voice-over / text trên màn hình <small>(nên có — AI không nghe được âm thanh)</small>
             <textarea name="transcript" rows="4" placeholder="0:00 Bạn có biết..."></textarea>
@@ -68,6 +75,11 @@
       <div class="grid">
         <form id="research-form" class="card form">
           <h2>Video viral tham khảo</h2>
+          <div class="import">
+            <input type="url" id="research-url" placeholder="Dán link video viral TikTok / YouTube / Reels / Facebook" />
+            <button type="button" class="ghost" data-import="research">Lấy video</button>
+          </div>
+          <div class="or">hoặc tải file lên</div>
           <label class="drop" data-input="research-file">
             <input type="file" id="research-file" accept="video/*" hidden />
             <span>Kéo thả hoặc bấm để chọn video viral</span>

@@ -10,6 +10,8 @@ Cách đánh giá:
 - Storytelling: cấu trúc hook → setup → giá trị/twist → payoff → CTA.
 - Engagement: lý do để comment, share, save, xem lại (loop).
 
+Nếu có số liệu hiện tại (views, likes, comments, shares), hãy tính tỷ lệ tương tác trên lượt xem để biết điểm yếu nằm ở đâu (ví dụ: nhiều view ít comment → thiếu lý do để bình luận).
+
 Chỉ nhận xét dựa trên những gì thực sự thấy trong khung hình và thông tin được cung cấp. Nếu không có lời thoại/âm thanh, hãy nói rõ là không đánh giá được audio thay vì đoán. Mọi đề xuất phải cụ thể, có mốc thời gian khi có thể, và dựng lại được ngay bằng CapCut/Premiere. Chấm điểm nghiêm khắc và thực tế: 50 là trung bình, trên 80 chỉ dành cho video thực sự xuất sắc.
 
 Trả lời hoàn toàn bằng tiếng Việt.`;

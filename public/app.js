@@ -27,6 +27,7 @@ $$(".tab").forEach((btn) =>
 
 // ---------------- File inputs ----------------
 const files = { analyze: null, research: null };
+const pickers = {};
 
 function setupDrop(kind) {
   const drop = $(`.drop[data-input="${kind}-file"]`);
@@ -39,6 +40,7 @@ function setupDrop(kind) {
     preview.hidden = false;
     drop.querySelector("span").textContent = `${file.name} — bấm để đổi video`;
   };
+  pickers[kind] = pick;
   input.addEventListener("change", () => pick(input.files[0]));
   drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.classList.add("over"); });
   drop.addEventListener("dragleave", () => drop.classList.remove("over"));
@@ -50,6 +52,67 @@ function setupDrop(kind) {
 }
 setupDrop("analyze");
 setupDrop("research");
+
+// ---------------- Import from link ----------------
+const fmtNum = (n) => (typeof n === "number" ? n.toLocaleString("vi-VN") : "");
+
+function setField(form, name, value) {
+  const el = form.elements[name];
+  if (!el || value === undefined || value === null || value === "") return;
+  if (el.tagName === "SELECT" && ![...el.options].some((o) => o.value === value)) return;
+  el.value = value;
+}
+
+// Enter in the link box imports instead of submitting the whole form.
+$$(".import input").forEach((input) =>
+  input.addEventListener("keydown", (e) => {
+    if (e.key !== "Enter") return;
+    e.preventDefault();
+    input.nextElementSibling.click();
+  }),
+);
+
+$$("[data-import]").forEach((btn) =>
+  btn.addEventListener("click", async () => {
+    const kind = btn.dataset.import;
+    const form = $(`#${kind}-form`);
+    const status = $(`#${kind}-status`);
+    const url = $(`#${kind}-url`).value.trim();
+    if (!url) return setStatus(status, "Hãy dán link video trước.", true);
+    btn.disabled = true;
+    const stop = withTimer(status, "Đang tải video từ link", "thường mất 10-60 giây");
+    try {
+      const { id, fileName, meta, transcript } = await api("/api/import", { url });
+      const res = await fetch(`/api/media/${id}`);
+      if (!res.ok) throw new Error("Không tải được file video từ server.");
+      const blob = await res.blob();
+      pickers[kind](new File([blob], fileName, { type: blob.type || "video/mp4" }));
+      setField(form, "platform", meta.platform);
+      setField(form, "url", meta.url);
+      setField(form, "title", meta.title);
+      setField(form, "caption", meta.caption);
+      setField(form, "transcript", transcript);
+      setField(form, "views", fmtNum(meta.views));
+      setField(form, "likes", fmtNum(meta.likes));
+      setField(form, "comments", fmtNum(meta.comments));
+      setField(form, "shares", fmtNum(meta.shares));
+      const stats = [
+        meta.views != null && `${fmtNum(meta.views)} views`,
+        meta.likes != null && `${fmtNum(meta.likes)} likes`,
+        meta.comments != null && `${fmtNum(meta.comments)} comments`,
+        meta.shares != null && `${fmtNum(meta.shares)} shares`,
+      ].filter(Boolean).join(", ");
+      setField(form, "stats", stats);
+      const notes = [meta.uploader && `Kênh: ${esc(meta.uploader)}`, transcript ? "đã lấy lời thoại từ phụ đề" : "không có phụ đề — nên tự dán lời thoại"];
+      setStatus(status, `Đã tải video. ${notes.filter(Boolean).join(" · ")}. Kiểm tra thông tin rồi bấm nút bên dưới.`);
+    } catch (err) {
+      setStatus(status, esc(err.message), true);
+    } finally {
+      stop();
+      btn.disabled = false;
+    }
+  }),
+);
 
 // ---------------- Frame extraction ----------------
 // The first 3 seconds are sampled densely (hook), the rest evenly.
@@ -126,10 +189,10 @@ function setStatus(el, html, isError = false) {
 const formData = (form) =>
   Object.fromEntries([...new FormData(form).entries()].filter(([, v]) => String(v).trim() !== ""));
 
-function withTimer(statusEl, label) {
+function withTimer(statusEl, label, hint = "thường mất 30-120 giây") {
   const started = Date.now();
   const tick = () =>
-    setStatus(statusEl, `<span class="spinner"></span>${label} (${Math.round((Date.now() - started) / 1000)}s) — thường mất 30-120 giây`);
+    setStatus(statusEl, `<span class="spinner"></span>${label} (${Math.round((Date.now() - started) / 1000)}s) — ${hint}`);
   tick();
   const id = setInterval(tick, 1000);
   return () => clearInterval(id);

@@ -18,6 +18,8 @@ export const VideoMetaSchema = z.object({
   title: z.string().optional(),
   caption: z.string().optional(),
   transcript: z.string().optional(),
+  url: z.string().optional(),
+  stats: z.string().optional(), // performance so far, for videos already posted
 });
 
 export const AnalyzeRequestSchema = z.object({
@@ -35,6 +37,10 @@ export const ResearchRequestSchema = z.object({
     url: z.string().optional(),
   }),
   frames: z.array(FrameSchema).min(1).max(60),
+});
+
+export const ImportRequestSchema = z.object({
+  url: z.string().min(1),
 });
 
 export const TrendsRequestSchema = z.object({
